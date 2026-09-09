@@ -4,13 +4,12 @@
   "version": "0.1.0",
   "type": "module",
   "scripts": {
-    "start": "vite --host 0.0.0.0",
-    "dev": "vite --host 0.0.0.0",
-    "build": "tsc && vite build",
-    "preview": "vite preview --host 0.0.0.0"
+    "start": "parcel index.html --host 0.0.0.0 --port 3000",
+    "dev": "parcel index.html --host 0.0.0.0 --port 3000",
+    "build": "parcel build index.html --dist-dir dist --public-url ./"
   },
   "devDependencies": {
-    "typescript": "^5.9.2",
-    "vite": "^7.1.5"
+    "parcel": "^2.15.4",
+    "typescript": "^5.9.2"
   }
 }
