@@ -1,4 +1,5 @@
 node_modules/
+.expo/
 dist/
-.vite/
+web-build/
 .DS_Store
