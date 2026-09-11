@@ -1,15 +1,25 @@
 {
   "name": "deepsea",
-  "private": true,
   "version": "0.1.0",
-  "type": "module",
+  "private": true,
+  "main": "expo/AppEntry",
   "scripts": {
-    "start": "parcel index.html --host 0.0.0.0 --port 3000",
-    "dev": "parcel index.html --host 0.0.0.0 --port 3000",
-    "build": "parcel build index.html --dist-dir dist --public-url ./"
+    "start": "expo start",
+    "web": "expo start --web",
+    "android": "expo start --android",
+    "ios": "expo start --ios",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "expo": "~54.0.23",
+    "expo-status-bar": "~3.0.8",
+    "react": "19.1.0",
+    "react-dom": "^19.1.0",
+    "react-native": "0.81.5",
+    "react-native-web": "^0.21.2"
   },
   "devDependencies": {
-    "parcel": "^2.15.4",
-    "typescript": "^5.9.2"
+    "@types/react": "~19.1.10",
+    "typescript": "~5.9.2"
   }
 }
