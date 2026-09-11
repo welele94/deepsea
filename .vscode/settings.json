@@ -1,7 +1,7 @@
 {
   "remote.portsAttributes": {
-    "3000": {
-      "label": "Deepsea game",
+    "8081": {
+      "label": "DeepSea Expo",
       "onAutoForward": "openBrowser"
     }
   }
