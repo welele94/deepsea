@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import {
+  ImageBackground,
   Pressable,
   StyleSheet,
   Text,
@@ -7,6 +8,10 @@ import {
   View,
 } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
+import bg1 from './src/background/bg1';
+import bg2 from './src/background/bg2';
+import bg3 from './src/background/bg3';
+import bg4 from './src/background/bg4';
 
 type Direction = 'down' | 'up';
 type CellType = 'empty' | 'treasure' | 'oxygen';
@@ -16,6 +21,8 @@ type Cell = {
   type: CellType;
   value?: number;
 };
+
+const DEEPSEA_BACKGROUND = `data:image/jpeg;base64,${bg1}${bg2}${bg3}${bg4}`;
 
 const TOTAL_DEPTH = 20;
 const DESCENT_TAPS_PER_CELL = 5;
@@ -44,7 +51,7 @@ const cells: Cell[] = Array.from({ length: TOTAL_DEPTH }, (_, index) => {
 });
 
 const xPattern = [
-  0.20, 0.43, 0.67, 0.79, 0.58,
+  0.2, 0.43, 0.67, 0.79, 0.58,
   0.31, 0.16, 0.38, 0.63, 0.76,
   0.56, 0.29, 0.13, 0.34, 0.62,
   0.81, 0.59, 0.36, 0.19, 0.48,
@@ -115,10 +122,7 @@ export default function App() {
 
   function diverPosition() {
     if (depth === 0) {
-      return {
-        x: worldWidth * 0.52,
-        y: 56,
-      };
+      return { x: worldWidth * 0.52, y: 56 };
     }
 
     const platform = platformPosition(depth);
@@ -177,9 +181,7 @@ export default function App() {
       const remaining = Math.max(0, burstEndsAtRef.current - Date.now());
       setTimeLeftMs(remaining);
 
-      if (remaining <= 0) {
-        finishBurst();
-      }
+      if (remaining <= 0) finishBurst();
     }, 40);
   }
 
@@ -290,6 +292,15 @@ export default function App() {
     <View style={styles.screen}>
       <StatusBar style="light" />
 
+      <ImageBackground
+        source={{ uri: DEEPSEA_BACKGROUND }}
+        resizeMode="cover"
+        style={styles.background}
+        imageStyle={styles.backgroundImage}
+      >
+        <View style={styles.backgroundWash} />
+      </ImageBackground>
+
       <View style={styles.oceanViewport}>
         <View
           style={[
@@ -306,6 +317,7 @@ export default function App() {
 
           <View style={[styles.surfaceLine, { top: SURFACE_Y }]} />
           <Text style={[styles.boat, { left: worldWidth * 0.39, top: 26 }]}>🚤</Text>
+
           {depth === 0 && (
             <Text
               style={[
@@ -354,6 +366,7 @@ export default function App() {
                     },
                   ]}
                 />
+
                 <View
                   style={[
                     styles.platform,
@@ -383,10 +396,7 @@ export default function App() {
                 <Text
                   style={[
                     styles.depthMarker,
-                    {
-                      left: platform.x - 30,
-                      top: platform.y - 2,
-                    },
+                    { left: platform.x - 30, top: platform.y - 2 },
                   ]}
                 >
                   {cell.depth}
@@ -516,7 +526,13 @@ function HudPill({ icon, value }: { icon: string; value: string }) {
 
 function OceanBands({ worldHeight }: { worldHeight: number }) {
   const bandHeight = worldHeight / 5;
-  const colors = ['#19a9dc', '#0989bf', '#066f9d', '#075579', '#073b59'];
+  const colors = [
+    'rgba(20, 169, 220, 0.03)',
+    'rgba(6, 126, 174, 0.12)',
+    'rgba(4, 94, 137, 0.25)',
+    'rgba(3, 62, 95, 0.40)',
+    'rgba(1, 28, 49, 0.58)',
+  ];
 
   return (
     <>
@@ -540,8 +556,18 @@ function OceanBands({ worldHeight }: { worldHeight: number }) {
 const styles = StyleSheet.create({
   screen: {
     flex: 1,
-    backgroundColor: '#073b59',
+    backgroundColor: '#06283c',
     overflow: 'hidden',
+  },
+  background: {
+    ...StyleSheet.absoluteFillObject,
+  },
+  backgroundImage: {
+    transform: [{ scale: 1.18 }],
+  },
+  backgroundWash: {
+    ...StyleSheet.absoluteFillObject,
+    backgroundColor: 'rgba(0, 24, 40, 0.14)',
   },
   oceanViewport: {
     ...StyleSheet.absoluteFillObject,
@@ -562,7 +588,7 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     height: 3,
-    backgroundColor: 'rgba(224, 248, 255, 0.75)',
+    backgroundColor: 'rgba(224, 248, 255, 0.72)',
     shadowColor: '#ffffff',
     shadowOpacity: 0.35,
     shadowRadius: 8,
@@ -576,14 +602,14 @@ const styles = StyleSheet.create({
     position: 'absolute',
     zIndex: 8,
     fontSize: 36,
-    textShadowColor: 'rgba(0,0,0,0.25)',
-    textShadowRadius: 6,
+    textShadowColor: 'rgba(0,0,0,0.35)',
+    textShadowRadius: 7,
   },
   platform: {
     position: 'absolute',
     height: 10,
     borderRadius: 8,
-    backgroundColor: '#9be5e9',
+    backgroundColor: 'rgba(155, 229, 233, 0.90)',
     borderTopWidth: 2,
     borderTopColor: '#d7fbff',
     borderBottomWidth: 2,
@@ -598,7 +624,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     height: 7,
     borderRadius: 8,
-    backgroundColor: 'rgba(0, 18, 31, 0.24)',
+    backgroundColor: 'rgba(0, 18, 31, 0.38)',
   },
   item: {
     position: 'absolute',
@@ -607,18 +633,20 @@ const styles = StyleSheet.create({
   },
   depthMarker: {
     position: 'absolute',
-    color: 'rgba(226,248,255,0.5)',
+    color: 'rgba(235, 250, 255, 0.72)',
     fontSize: 11,
     fontWeight: '800',
+    textShadowColor: 'rgba(0,0,0,0.55)',
+    textShadowRadius: 4,
   },
   seabed: {
     position: 'absolute',
     left: 0,
     right: 0,
     height: 92,
-    backgroundColor: '#06283c',
+    backgroundColor: 'rgba(3, 25, 40, 0.58)',
     borderTopWidth: 8,
-    borderTopColor: '#174b5a',
+    borderTopColor: 'rgba(23, 75, 90, 0.78)',
     alignItems: 'center',
     paddingTop: 15,
   },
@@ -647,13 +675,17 @@ const styles = StyleSheet.create({
     fontSize: 22,
     fontWeight: '900',
     letterSpacing: 3,
+    textShadowColor: 'rgba(0,0,0,0.5)',
+    textShadowRadius: 7,
   },
   message: {
     maxWidth: 520,
     marginTop: 3,
-    color: 'rgba(239,251,255,0.82)',
+    color: 'rgba(239,251,255,0.90)',
     fontSize: 12,
     fontWeight: '600',
+    textShadowColor: 'rgba(0,0,0,0.55)',
+    textShadowRadius: 5,
   },
   resetButton: {
     width: 39,
@@ -661,7 +693,7 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: 'rgba(4,35,52,0.52)',
+    backgroundColor: 'rgba(4,35,52,0.66)',
     borderWidth: 1,
     borderColor: 'rgba(255,255,255,0.22)',
   },
@@ -683,9 +715,9 @@ const styles = StyleSheet.create({
     minHeight: 30,
     paddingHorizontal: 10,
     borderRadius: 16,
-    backgroundColor: 'rgba(3,37,57,0.55)',
+    backgroundColor: 'rgba(3,37,57,0.68)',
     borderWidth: 1,
-    borderColor: 'rgba(255,255,255,0.14)',
+    borderColor: 'rgba(255,255,255,0.16)',
   },
   hudIcon: {
     fontSize: 13,
@@ -715,7 +747,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     gap: 9,
     borderRadius: 24,
-    backgroundColor: 'rgba(3, 29, 44, 0.82)',
+    backgroundColor: 'rgba(3, 29, 44, 0.86)',
     borderWidth: 1,
     borderColor: 'rgba(255,255,255,0.2)',
   },
@@ -822,7 +854,7 @@ const styles = StyleSheet.create({
     zIndex: 20,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: 'rgba(0,18,30,0.07)',
+    backgroundColor: 'rgba(0,18,30,0.10)',
   },
   activeCenter: {
     width: 210,
@@ -830,7 +862,7 @@ const styles = StyleSheet.create({
     paddingVertical: 16,
     paddingHorizontal: 18,
     borderRadius: 28,
-    backgroundColor: 'rgba(1, 25, 39, 0.68)',
+    backgroundColor: 'rgba(1, 25, 39, 0.72)',
     borderWidth: 1,
     borderColor: 'rgba(255,255,255,0.22)',
   },
